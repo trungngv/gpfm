@@ -1,49 +1,153 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
+    <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Gaussian Process Factorization Machines  by trungngv</title>
-
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+    <title>Gaussian Process Factorization Machines  by trungngv</title>
   </head>
+
   <body>
-    <div class="wrapper">
-      <header>
-        <h1>Gaussian Process Factorization Machines </h1>
-        <p>Code for the paper &quot;Gaussian Process Factorization Machines  for Context-aware Recommendations&quot;</p>
+    <div id="container">
+      <div class="inner">
 
-        <p class="view"><a href="https://github.com/trungngv/gpfm">View the Project on GitHub <small>trungngv/gpfm</small></a></p>
+        <header>
+          <h1>Gaussian Process Factorization Machines </h1>
+          <h2>Code for the paper &quot;Gaussian Process Factorization Machines  for Context-aware Recommendations&quot;</h2>
+        </header>
 
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/trungngv/gpfm/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/trungngv/gpfm/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/trungngv/gpfm" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
 
-        <ul>
-          <li><a href="https://github.com/trungngv/gpfm/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/trungngv/gpfm/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/trungngv/gpfm">View On <strong>GitHub</strong></a></li>
-        </ul>
-      </header>
-      <section>
-        <h1>
+        <hr>
+
+        <section id="main_content">
+          <h1>
 <a name="gpfm" class="anchor" href="#gpfm"><span class="octicon octicon-link"></span></a>gpfm</h1>
 
-<p>Code for the paper "Gaussian Process Factorization Machines  for Context-aware Recommendations"</p>
+<p>This is the documentation of the code for the Gaussian process factorization machines (GPFMs) used in our SIGIR'2014 paper entitled "Gaussian Process Factorization Machines  for Context-aware Recommendations". </p>
 
-<ol>
-<li><p>Explicit Feedback</p></li>
-<li><p>Implicit Feedback </p></li>
-</ol>
-      </section>
-      <footer>
-        <p>This project is maintained by <a href="https://github.com/trungngv">trungngv</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
-      </footer>
+<p>For questions, please contact trung(dot)ngvan(at)gmail(dot)com.</p>
+
+<p>Last update: 10/05/2014.</p>
+
+<h2>
+<a name="input-format" class="anchor" href="#input-format"><span class="octicon octicon-link"></span></a>INPUT FORMAT</h2>
+
+<p>GPFM can deal with two types of feedback: explicit and implicit. The code requires that you provide the training and testing data in the format required by GPFM (for explicit feedback) and GPPW (for implicit feedback). This should be given in the form of observation matrices.</p>
+
+<h3>
+<a name="11-explicit-feedback" class="anchor" href="#11-explicit-feedback"><span class="octicon octicon-link"></span></a>1.1 Explicit feedback</h3>
+
+<p>It is most convenient to introduce the observation matrix with an example:</p>
+
+<p>1 2 1 1 4</p>
+
+<p>1 1 2 1 3</p>
+
+<p>1 1 1 2 1</p>
+
+<p>2 1 2 2 5</p>
+
+<p>2 1 3 1 1</p>
+
+<p>Here we have 5 observations each represented in one row of the matrix. When storing in a file, the equivalent is one line of the file.</p>
+
+<p>Each row/observation contains the following attributes:</p>
+
+<p>user_id, item_id, context_variable_1, context_variable_2, ..., context_variable_K, rating.</p>
+
+<p>Consider the 3rd observation, the user_id is 1, item_id is 1, and it has two contextual variables. The first contextual variable has value 1 and the second has value 2. The rating given to this combination of item and context (1,1,2) is 1 by the user.</p>
+
+<p>Some important issues to remember:</p>
+
+<ul>
+<li>Currently only categorical attributes are supported. Thus, all elements of the matrix must be integer (except the ratings which can be real-valued).</li>
+<li>In MATLAB, subscript/index starts from 1 so if your data has 0, you must convert that to 1 e.g. increase the value of all of your categorical features.</li>
+</ul><p>See <em>data/demo_train.csv</em> and <em>data/demo_test.csv</em>. Of course, the format is the same for both of the training and testing data.</p>
+
+<h3>
+<a name="12-implicit-feedback" class="anchor" href="#12-implicit-feedback"><span class="octicon octicon-link"></span></a>1.2 Implicit feedback</h3>
+
+<p>For the case of implicit feedback, an additional pairwise comparison matrix is required for pairwise preference training.
+If we were to convert the above dataset into implicit feedback with rating higher than 3 as relevant items, the following 2 matrices are needed for GPPW.</p>
+
+<p><strong>Item-based matrix:</strong></p>
+
+<p>1 2 1 1 +1</p>
+
+<p>1 1 2 1 -1</p>
+
+<p>1 1 1 2 -1</p>
+
+<p>2 1 2 2 +1</p>
+
+<p>2 1 3 1 -1</p>
+
+<p>Note that this matrix is in exactly the same format as in the explicit feedback case, except that now the ratings are +1 (relevant) and -1 (irrelevant) only. Likewise, the test matrix can be of the same format as well.</p>
+
+<p><strong>Pairwise matrix:</strong></p>
+
+<p>1 2 1 1 1 2 1 +1</p>
+
+<p>1 2 1 1 1 1 2 +1</p>
+
+<p>1 1 2 1 2 1 1 -1</p>
+
+<p>1 1 1 2 2 1 1 -1</p>
+
+<p>2 1 2 2 1 3 1 +1</p>
+
+<p>2 1 3 1 1 2 2 -1</p>
+
+<p>Each row in the pairwise matrix has the form:</p>
+
+<p>user_id, (item_id1, contexts1), (item_id2, contexts2), preference</p>
+
+<p>where preference = +1 if user prefers the first combination (item_id1, contexts1) over the second combination (item_id2, contexts2).</p>
+
+<p>Let us consider user 1 as an example. He likes the (item,context) combination of (2,1,1) and dislikes the combination of (1,2,1) so we create the pairwise preference in the first row: 1 2 1 1 1 2 1 +1</p>
+
+<p>See <em>data/demo_pw_train.csv</em> for an example of pairwise matrix; <em>data/demo_pw_item.csv</em> and <em>data/demo_pw_test.csv</em> are similar to that in the explicit case.</p>
+
+<h2>
+<a name="training-and-making-prediction" class="anchor" href="#training-and-making-prediction"><span class="octicon octicon-link"></span></a>TRAINING AND MAKING PREDICTION</h2>
+
+<p>Once the data is in the right format, it is straightforward to run GPFM or GPPW on them. </p>
+
+<p>There are a few parameters to configure for each specific dataset, but the recommended / default values can be found in the demo script. 
+The most important ones are:</p>
+
+<ul>
+<li>
+<strong>kernel</strong> : which kernel to use (one of 'rbf', 'linearOne', or 'linear'), but 'rbf' is most powerful and often outperforms the other two kernels</li>
+<li>
+<strong>useBias</strong> : whether to use the bias term in the model</li>
+<li>
+<strong>learnRate</strong> : learning rate of the stochastic gradient descent algorithm (this should be set according to the datasets)</li>
+<li>
+<strong>dimItem</strong> : the latent dimension of items</li>
+<li>
+<strong>dimContext</strong> : the latent dimensions of contexts </li>
+</ul><p>See <em>scripts/demo_gpfm.m</em> and <em>scripts/demo_gppw.m</em> for an example of how to set-up and run a GPFM model on an explicit feedback problem and a GPPW model on an implicit feedback problem. </p>
+        </section>
+
+        <footer>
+          Gaussian Process Factorization Machines  is maintained by <a href="https://github.com/trungngv">trungngv</a><br>
+          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+        
+      </div>
     </div>
-    <script src="javascripts/scale.fix.js"></script>
-    
   </body>
 </html>
