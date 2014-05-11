@@ -7,7 +7,7 @@ For questions, please contact trung(dot)ngvan(at)gmail(dot)com.
 
 Last update: 10/05/2014.
 
-1. INPUT FORMAT
+INPUT FORMAT
 
 GPFM can deal with two types of feedback: explicit and implicit. The code requires that you provide the training and testing data in the format required by GPFM (for explicit feedback) and GPPW (for implicit feedback). This should be given in the form of observation matrices.
 
@@ -81,7 +81,7 @@ Let us consider user 1 as an example. He likes the (item,context) combination of
 
 See data/demo_pw_train.csv for an example of pairwise matrix; data/demo_pw_item.csv and data/demo_pw_test.csv are similar to that in the explicit case.
 
-2. TRAINING and PREDICTION
+TRAINING AND MAKING PREDICTION
 
 Once the data is in the right format, it is straightforward to run GPFM or GPPW on them. 
 
