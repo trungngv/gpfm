@@ -1,7 +1,7 @@
 gpfm
 ====
 
-This is the documentation of the code for the Gaussian process factorization machines (GPFMs) used in our SIGIR'2014 paper entitled "Gaussian Process Factorization Machines  for Context-aware Recommendations". It can be run with MATLAB or Octave (tested on version 3.6.0 on Ubuntu). 12.04)
+This is the documentation of the code for the Gaussian process factorization machines (GPFMs) used in our SIGIR'2014 paper entitled "Gaussian Process Factorization Machines  for Context-aware Recommendations". It can be run with MATLAB or Octave (tested on version 3.6.0 on Ubuntu 12.04).
 
 For questions, please contact trung(dot)ngvan(at)gmail(dot)com.
 
