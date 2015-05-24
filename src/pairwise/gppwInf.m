@@ -82,7 +82,7 @@ if nargout >= 2
     dKdi = dprefKernel(Xleft,Xleft,i) + dprefKernel(Xright,Xright,i);
     dKpmi = dprefKernel(Xleft,Xright,i);
     dKdi = dKdi - dKpmi - dKpmi';
-    grad.hyp(i) = 0.5 * traceAB(invKyMinusAlpha2,dKdi);
+    grad.hyp(i) = 0.5 * traceABsym(invKyMinusAlpha2,dKdi);
   end
   
   % gradients of noise
